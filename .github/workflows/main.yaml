@@ -6,15 +6,33 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  win:
     defaults:
       run:
         shell: ${{ matrix.shell }}
     strategy:
       matrix:
-        os: [windows-2022, windows-2019, ubuntu-latest]
-        shell: [pwsh, bash]
+        os: [windows-2022, windows-2019, windows-2016]
+        shell: [pwsh, powershell, cmd, bash]
     runs-on: ${{ matrix.os }}
+    steps:
+      - name: Set env
+        run: |
+          echo "VERSION=5" >> $GITHUB_ENV
+      - name: get env
+        run: |
+          echo "${{ env.VERSION }}"
+        env:
+          VERSION: ${{ env.VERSION }}
+  other:
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, ubuntu-18.04, macos-11, macos-10.15]
+        shell: [pwsh, bash, sh]
+    runs-on: macos-10.15
     steps:
       - name: Set env
         run: |
